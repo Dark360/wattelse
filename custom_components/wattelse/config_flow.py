@@ -19,11 +19,15 @@ from homeassistant.helpers.selector import (
     NumberSelectorConfig,
     NumberSelectorMode,
     TextSelector,
+    SelectSelector,
+    SelectSelectorConfig,
 )
 import voluptuous as vol
 
 from .const import (
     CONF_CURRENCY,
+    CONF_ENERGY_TYPE,
+    DEFAULT_ENERGY_TYPE,
     CONF_LEVY_AMOUNT,
     CONF_LEVY_NAME,
     CONF_NAME,
@@ -55,6 +59,13 @@ def _schema(defaults: dict[str, Any]) -> vol.Schema:
     """
     return vol.Schema(
         {
+            vol.Required(
+                CONF_ENERGY_TYPE,
+                default=defaults.get(CONF_ENERGY_TYPE, DEFAULT_ENERGY_TYPE),
+            ): SelectSelector(SelectSelectorConfig(options=[
+                {"value": "electricity", "label": "Electricity"},
+                {"value": "gas", "label": "Gas"},
+            ])),
             vol.Required(CONF_NAME, default=defaults.get(CONF_NAME, DEFAULT_NAME)): TextSelector(),
             vol.Required(
                 CONF_CURRENCY, default=defaults.get(CONF_CURRENCY, DEFAULT_CURRENCY)

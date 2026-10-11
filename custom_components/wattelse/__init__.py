@@ -23,6 +23,8 @@ from .backfill import async_backfill
 from .const import (
     ATTR_VALUE,
     CONF_CURRENCY,
+    CONF_ENERGY_TYPE,
+    DEFAULT_ENERGY_TYPE,
     CONF_LEVY_AMOUNT,
     CONF_STANDING_CHARGE,
     CONF_START_DATE,
@@ -79,7 +81,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # default we read them off the Energy dashboard: every grid consumption source, and
     # never the export credit. Detected here, before the sensors are built, because the
     # VAT sensor needs the list the moment it is created.
-    detected = await async_detect_vat_sources(hass)
+    opts = {**entry.data, **entry.options}
+    energy_type = opts.get(CONF_ENERGY_TYPE, DEFAULT_ENERGY_TYPE)
+    detected = await async_detect_vat_sources(hass, energy_type)
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {"detected_vat_sources": detected}
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -92,7 +96,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if f"{kind}_energy" in ids and f"{kind}_cost" in ids
     ]
     if pairs:
-        await async_add_sources(hass, pairs)
+        await async_add_sources(hass, pairs, energy_type)
 
     await _async_backfill_once(hass, entry, ids, detected)
 
@@ -138,6 +142,7 @@ async def _async_backfill_once(
         str(x)
         for x in (
             integration_version(hass),
+            opts.get(CONF_ENERGY_TYPE, DEFAULT_ENERGY_TYPE),
             start_date,
             opts.get(CONF_STANDING_CHARGE),
             opts.get(CONF_LEVY_AMOUNT),

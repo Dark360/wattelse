@@ -7,7 +7,30 @@
 
 <img src="custom_components/wattelse/brand/icon.png" width="120" align="right" alt="WattElse">
 
-**Everything on your electricity bill that isn't kilowatt-hours.**
+**Fixed charges and VAT for electricity and gas bills.**
+
+## Electricity and gas
+
+Create a separate WattElse entry for each fuel and select **Energy type** in its
+setup/options form. Names are labels only: naming an entry Gas does not select gas.
+Gas charges are registered in the Energy dashboard's Gas section; electricity charges
+remain under Electricity. Automatic VAT detection only includes consumption costs for
+the selected fuel. Explicit **Apply VAT to** selections override automatic detection.
+
+Existing entries default to Electricity. To correct an existing entry named Gas,
+open its options and select Gas. Its old electricity registrations are removed on
+reload, while entity IDs and accumulated charge statistics are preserved. Switching
+fuel reclassifies the entry's existing history too, so only switch an entry that was
+already intended for that fuel. A configured start date causes backfill to be rebuilt.
+
+Gas charge placeholders remain **0 kWh energy sensors**: Home Assistant accepts energy
+in kWh in the Gas section as well as gas volume. Keeping kWh preserves existing
+statistics and avoids changing sensor units during migration. Actual gas usage can
+still come from your existing kWh or volume meter.
+
+If your consumption prices and standing charges already include VAT, set WattElse VAT
+to **0** and enter those inclusive charges. Otherwise use net prices and configure VAT
+separately; do not add VAT twice.
 
 Home Assistant's Energy dashboard can only do one thing: multiply kWh by a price. But a
 real bill also has a standing charge, often a flat monthly levy, and VAT on top of all of

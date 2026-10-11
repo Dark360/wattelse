@@ -91,7 +91,7 @@ def _without_ours(
     """
     kept: list[dict[str, Any]] = []
     for source in sources:
-        if source.get("type") != "grid":
+        if source.get("type") not in ("grid", "gas"):
             kept.append(source)
             continue
         if "flow_from" in source:
@@ -119,7 +119,7 @@ def _energy_stat(source: dict[str, Any]) -> list[str]:
 
 
 async def async_add_sources(
-    hass: HomeAssistant, pairs: list[tuple[str, str]]
+    hass: HomeAssistant, pairs: list[tuple[str, str]], energy_type: str = "electricity"
 ) -> None:
     """Add (energy_entity, cost_entity) pairs to the Energy dashboard, in bill order.
 
@@ -151,7 +151,20 @@ async def async_add_sources(
     kept = _without_ours(sources, ours)
 
     grids = [s for s in kept if s.get("type") == "grid" and "flow_from" in s]
-    if grids:
+    if energy_type == "gas":
+        # Gas uses a flat source, not electricity's flow_from/flow_to layout.
+        # Remove old grid registrations too when an existing entry switches fuel.
+        wanted = kept + [
+            {
+                "type": "gas",
+                "stat_energy_from": energy,
+                "stat_cost": cost,
+                "entity_energy_price": None,
+                "number_energy_price": None,
+            }
+            for energy, cost in pairs
+        ]
+    elif grids:
         # The last one, so no other source's tariffs can be drawn after our charges.
         host = grids[-1]
         exports = [f for s in grids for f in s.get("flow_to") or []]
@@ -222,7 +235,9 @@ async def async_remove_sources(hass: HomeAssistant, energy_entities: list[str]) 
     _LOGGER.info("Removed the charges from the Energy dashboard")
 
 
-async def async_detect_vat_sources(hass: HomeAssistant) -> list[str]:
+async def async_detect_vat_sources(
+    hass: HomeAssistant, energy_type: str = "electricity"
+) -> list[str]:
     """Find the cost sensors that VAT should be charged on.
 
     VAT is charged on what you *consume from the grid*, and on this integration's own
@@ -255,7 +270,7 @@ async def async_detect_vat_sources(hass: HomeAssistant) -> list[str]:
 
     found: list[str] = []
     for source in manager.data.get("energy_sources") or []:
-        if source.get("type") != "grid":
+        if source.get("type") != ("gas" if energy_type == "gas" else "grid"):
             continue
         flows = (
             source.get("flow_from")

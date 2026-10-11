@@ -3,8 +3,9 @@
     "step": {
       "user": {
         "title": "WattElse",
-        "description": "Todo lo que hay en tu factura de la luz y no son kilovatios-hora.\n\n**Pon todos los precios del kWh en el panel de energia SIN IVA** -- peak, off-peak, night y cualquier otra tarifa. WattElse anade el IVA como una linea aparte, igual que tu factura, asi que un precio con el IVA ya dentro se gravaria dos veces.\n\nEl IVA se aplica a todas las fuentes de consumo de la red del panel de energia, ademas del standing charge y el cargo mensual. Nunca al export credit: el dinero que te devuelven no lleva impuesto.\n\nDeja un cargo a 0 y no se creara.",
+        "description": "Cargos fijos e IVA para electricidad y gas.\n\n**Pon todos los precios del kWh en el panel de energia SIN IVA** -- peak, off-peak, night y cualquier otra tarifa. WattElse anade el IVA como una linea aparte, igual que tu factura, asi que un precio con el IVA ya dentro se gravaria dos veces.\n\nEl IVA se aplica a las fuentes de consumo del tipo de energia seleccionado, ademas del standing charge y el cargo mensual. Nunca al export credit: el dinero que te devuelven no lleva impuesto.\n\nDeja un cargo a 0 y no se creara.",
         "data": {
+          "energy_type": "Tipo de energía",
           "name": "Nombre",
           "currency": "Moneda",
           "standing_charge": "Standing charge (por dia)",
@@ -18,7 +19,7 @@
         "data_description": {
           "standing_charge": "El cargo fijo diario, sin IVA. Se devenga de forma continua.",
           "levy_amount": "Una cuota fija mensual, como el PSO levy irlandes, sin IVA. Se cobra entera al cambiar de mes, nunca repartida por dias: prorratear una cuota mensual por dias no puede cuadrar a la vez en ciclos de 30 y de 31 dias.",
-          "vat_sources": "Dejalo vacio y WattElse lo resuelve solo: grava todas las fuentes de consumo de la red del panel de energia y nunca el export credit. Rellenalo solo si quieres cambiar eso, por ejemplo si alguna de tus fuentes va exenta de impuesto.",
+          "vat_sources": "Dejalo vacio y WattElse lo resuelve solo: grava las fuentes de consumo del tipo de energia seleccionado y nunca el export credit. Rellenalo solo si quieres cambiar eso, por ejemplo si alguna de tus fuentes va exenta de impuesto.",
           "show_rate_in_name": "Mete la tarifa en el nombre que se ve en el panel de energia, de modo que la lista de Sources documenta la tarifa que te esta cobrando.",
           "start_date": "El dia en que empezo tu tarifa actual. WattElse reconstruye el historico desde esa fecha: el standing charge hora a hora, el cargo mensual como escalon en cada cambio de mes, y el IVA calculado sobre el consumo que ya tienes en la base de datos. Sin esta fecha los cargos empiezan hoy en cero y las facturas pasadas no cuadraran. Se ejecuta una vez; cambia la fecha para volver a lanzarlo."
         }
@@ -31,6 +32,7 @@
         "title": "WattElse",
         "description": "Cambiar una tarifa solo afecta a lo que se devengue de ahora en adelante. Lo que ya te facturaron se queda como te lo facturaron. Recuerda que los precios del kWh deben seguir sin IVA.",
         "data": {
+          "energy_type": "Tipo de energía",
           "name": "Nombre",
           "currency": "Moneda",
           "standing_charge": "Standing charge (por dia)",
@@ -42,7 +44,7 @@
           "start_date": "Los cargos empiezan el (opcional)"
         },
         "data_description": {
-          "vat_sources": "Dejalo vacio y WattElse lo resuelve solo: grava todas las fuentes de consumo de la red del panel de energia y nunca el export credit. Rellenalo solo si quieres cambiar eso, por ejemplo si alguna de tus fuentes va exenta de impuesto.",
+          "vat_sources": "Dejalo vacio y WattElse lo resuelve solo: grava las fuentes de consumo del tipo de energia seleccionado y nunca el export credit. Rellenalo solo si quieres cambiar eso, por ejemplo si alguna de tus fuentes va exenta de impuesto.",
           "start_date": "El dia en que empezo tu tarifa actual. WattElse reconstruye el historico desde esa fecha: el standing charge hora a hora, el cargo mensual como escalon en cada cambio de mes, y el IVA calculado sobre el consumo que ya tienes en la base de datos. Sin esta fecha los cargos empiezan hoy en cero y las facturas pasadas no cuadraran. Se ejecuta una vez; cambia la fecha para volver a lanzarlo."
         }
       }

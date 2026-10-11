@@ -8,6 +8,8 @@ DOMAIN: Final = "wattelse"
 
 # Config / options keys
 CONF_NAME: Final = "name"
+CONF_ENERGY_TYPE: Final = "energy_type"
+DEFAULT_ENERGY_TYPE: Final = "electricity"
 CONF_CURRENCY: Final = "currency"
 CONF_STANDING_CHARGE: Final = "standing_charge"
 CONF_LEVY_AMOUNT: Final = "levy_amount"
